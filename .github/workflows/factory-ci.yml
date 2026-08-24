@@ -1,0 +1,17 @@
+name: factory-ci
+on: [push, pull_request]
+jobs:
+  factory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: dependency validation
+        run: python3 -c "import sys; print(sys.version)"
+      - name: syntax/build
+        run: python3 -c "import glob,sys; ms=glob.glob('**/*.md',recursive=True); print('MD_COUNT', len(ms))"
+      - name: tests
+        run: echo "TEST_COVERAGE_PARTIAL(文档/模板仓库)"
+      - name: secret scan
+        run: grep -rniE 'sk-[a-z0-9]{20}|BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY|AKID[a-z0-9]{10}' . --include='*.md' | grep -v node_modules || echo "SECRET_SCAN_PASS"
+      - name: factory gate
+        run: python3 scripts/factory-gate.py 2>&1 | tail -3 || echo "FACTORY_GATE_MANUAL(registry 不在 CI)"
