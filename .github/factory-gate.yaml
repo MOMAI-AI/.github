@@ -1,0 +1,7 @@
+repo: .github
+product: platform (CANDIDATE)
+lifecycle: CANDIDATE
+test_coverage: PARTIAL
+ci: enabled
+secrets_required: false
+production_deployment: NONE (未部署, 概念资产)
